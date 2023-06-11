@@ -1,7 +1,29 @@
 <script>
+	import Carousel from 'svelte-carousel';
 	export let data;
 	let type = data.pokemon.types.map((type) => type.type.name).join(', ');
 	const indexName = data.pokemon.name.charAt(0).toUpperCase() + data.pokemon.name.slice(1);
+	let carousel
+	const sprites = ['front_default', 'back_default']
+	let colours = [];
+
+	$:{
+        data.pokemon.types.forEach(element => {
+            colours.push(mapOfTypeToColour[element.type.name])
+        });
+
+		if (colours.length <=1) {
+			colours.push(mapOfTypeToColour[type])
+		}
+    }
+
+   const mapOfTypeToColour = {
+        fire: "red",
+        water: "blue",
+		grass: "green",
+		poison: "purple"
+    };
+
 </script>
 
 <svelte:head>
@@ -9,8 +31,8 @@
 	<meta name="description" content="Poke" />
 </svelte:head>
 
-<div class="flex flex-col items-center bg-blue-500"> // TODO remove fill and make div border dynamic based on type blue for water, red for fire, etc. Can gradient the border when multiple types
-	<!-- h1 with mon name in -->
+
+<div class="flex flex-col items-center border-4 border-x-{colours[0]}-500 border-y-{colours[1]}-500">
 	<h1 class="text-4xl text-center my-8 capitalize">{data.pokemon.name}</h1>
 
 	<p>
@@ -18,15 +40,15 @@
 		| Weight <strong>{data.pokemon.weight}</strong>
 	</p>
 
-	// TODO front and back sprites to be in a Carousel svelte component
-	<img
-		class="w-60 h-60 inline-flex"
-		src={data.pokemon.sprites['front_default']}
-		alt={data.pokemon.name}
-	/>
-	<img
-		class="w-60 h-60 inline-flex"
-		src={data.pokemon.sprites['back_default']}
-		alt={data.pokemon.name}
-	/>
+	<div class="w-1/3">
+	<Carousel
+		bind:this={carousel}
+		autoplay
+		autoplayDuration={2500}
+	>
+	{#each sprites as sprite}
+		<img class="w-full inline-flex" src={data.pokemon.sprites[sprite]} alt={data.pokemon.name} />
+	{/each}
+	</Carousel>
+</div>
 </div>

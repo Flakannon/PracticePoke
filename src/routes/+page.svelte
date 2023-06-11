@@ -4,12 +4,7 @@
 
     let filterTerm = "";
     let filteredPokemon = [];
-    // dollar sign get data from store and react to changes
-    // console.log($pokemon);
-
-    // inline reactive function that looks at changes to the filter input and updates the filteredPokemon array displayed to user
     $:{
-        // console.log("filterTerm changed: ", filterTerm);
         if(filterTerm) {
             filteredPokemon = $pokemon.filter(mon => mon.name.toLowerCase().includes(filterTerm.toLowerCase()) || mon.id.toString().includes(filterTerm));
         } else {
